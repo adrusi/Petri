@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "run.py", line 16, in <module>
+    v_two(args.wrap, args.dim, args.speed)
+  File "/Users/Adrian/code/petri-python/petri.py", line 305, in v_two
+    time.sleep(delay)
+KeyboardInterrupt

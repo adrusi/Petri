@@ -4,7 +4,7 @@ import os
 import math
 import sys
 import time
-def v_one(dos, dim):
+def v_one(dos, dim, delay, light):
   def gen_row(min, max):
     return [randint(min, max) if random() <= 0.4 else 0 for i in range(0, dim)]
 
@@ -160,17 +160,14 @@ def v_one(dos, dim):
     cells.append(row)
 
   def escape_code(nutrition, cell):
-    if dos:
-      background = ["F", "7", "E", "6", "8", "0"][int(nutrition)]
-      text = int(round(cell.energy / 2)) if hasattr(cell, "energy") else " "
-      foreground = "4"
-      os.system("color %s%s" % (background, foreground))
-      return str(text)
+    background = []
+    if not hasattr(cell, "energy"):
+      if not light: background = [255, 251, 246, 242, 237, 232][int(nutrition)]
+      else: background = [255, 253, 251, 249, 247, 245][int(nutrition)]
     else:
-      background = [255, 250, 245, 240, 235, 232][int(nutrition)]
-      text = int(round(cell.energy / 2)) if hasattr(cell, "energy") else " "
-      foreground = 196
-      return "\033[48;5;%dm\033[38;5;%dm%s\033[0m" % (background, foreground, text)
+      n = int(round(cell.energy / 2))
+      background = [52, 88, 124, 160, 196, 87][n] if n <= 5 else 5
+    return "\033[48;5;%dm \033[0m" % background
 
   def draw_dish():
     str = ""
@@ -202,4 +199,4 @@ def v_one(dos, dim):
     progress()
     # foo = raw_input()
     # if foo == "stop": break
-    time.sleep(0.1)
+    time.sleep(delay)

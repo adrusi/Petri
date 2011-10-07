@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+#mypath=`realpath $0`
+cd `dirname $0`
+python ../run.py $@

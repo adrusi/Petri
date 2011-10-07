@@ -5,11 +5,11 @@ import os
 import math
 import sys
 import time
-def v_two(wrap = False, dim = 50):
+def v_two(wrap, dim, delay, light):
 
   def gaurd(n):
     if n < 0:
-      return dim if wrap else 1
+      return dim - 1 if wrap else 1
     elif n > dim - 1:
       return 0 if wrap else dim - 2
     else:
@@ -87,7 +87,7 @@ def v_two(wrap = False, dim = 50):
             # self.move(direction)
             # self.energy -= 2
             # break
-            points[i] = (nut + random.randint(-1, 1)) + (2 if self.has_neighbor(direction) else 0)
+            points[i] = (nut + random.randint(-1, 1)) + (3 - random.randint(0, 2) if self.has_neighbor(direction) else 0)
         num_non_zeros = 0
         for i in points:
           if i != 0: num_non_zeros += 1
@@ -264,10 +264,14 @@ def v_two(wrap = False, dim = 50):
     cells.append(row)
 
   def escape_code(nutrition, cell):
-    background = [255, 250, 245, 240, 235, 232][int(nutrition)]
-    text = int(round(cell.energy / 2)) if hasattr(cell, "energy") else " "
-    foreground = 196
-    return "\033[48;5;%dm\033[38;5;%dm%s\033[0m" % (background, foreground, text)
+    background = []
+    if not hasattr(cell, "energy"):
+      if not light: background = [255, 251, 246, 242, 237, 232][int(nutrition)]
+      else: background = [255, 253, 251, 249, 247, 245][int(nutrition)]
+    else:
+      n = int(round(cell.energy / 2))
+      background = [52, 88, 124, 160, 196, 87][n] if n <= 5 else 5
+    return "\033[48;5;%dm \033[0m" % background
 
   def draw_dish():
     str = "\033[2j"
@@ -302,6 +306,6 @@ def v_two(wrap = False, dim = 50):
     # foo = raw_input()
     # if foo == "stop": break
     # time.sleep(0.5)
-    time.sleep(0.1)
+    time.sleep(delay)
 
   os.system("clear")
